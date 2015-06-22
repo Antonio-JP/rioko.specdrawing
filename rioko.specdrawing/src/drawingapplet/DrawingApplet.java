@@ -1,15 +1,19 @@
 package drawingapplet;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.io.Writer;
 import java.net.URI;
-import java.util.ArrayList;
-
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Arrays;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaCompiler;
-import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 import javax.tools.JavaFileObject.Kind;
-import javax.tools.SimpleJavaFileObject;
+import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
 import org.eclipse.swt.events.MouseEvent;
@@ -41,6 +45,8 @@ public class DrawingApplet extends SWTApplet {
 	private GraphViewerComposite viewerKoren;
 
 	private GraphViewerComposite viewerIterative;
+	
+	private int auxNum = 0;
 	
 	
 	public DrawingApplet() {
@@ -127,46 +133,48 @@ public class DrawingApplet extends SWTApplet {
 
 			@Override
 			public void mouseUp(MouseEvent arg0) {
-				String className = "AuxiliaryGraphCreator";
-				String code =  getStringCode(className);
+				swapSystemToJDK();
+				String className = "AuxiliaryGraphCreator_"+auxNum;
+				URI uriForFile = URI.create(pathToCode + className.replace('.','/') + Kind.SOURCE.extension);
+				File[] code =  getStringCode(className, uriForFile);
 				
 				if(code != null) {
 					JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 					
 					Writer out = null;
-					JavaFileManager fileManager = null;
+				    StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
 					DiagnosticListener<? super JavaFileObject> diagnosticListener = null;
 					Iterable<String> options = null;
 					Iterable<String> classes = null;
-					ArrayList<JavaFileObject> compilationUnits = new ArrayList<JavaFileObject>();
-					compilationUnits.add(
-					    new SimpleJavaFileObject(URI.create("string:///" + className.replace('.','/') + Kind.SOURCE.extension), Kind.SOURCE) {
-					    	@Override
-					        public CharSequence getCharContent(boolean ignoreEncodingErrors) {
-					        	return code;
-					        }
-					    }
-					);
-	
-					compiler.getTask(out, fileManager, diagnosticListener, options, classes, compilationUnits).call();
-					
-					UndirectedGraphCreator creator;
+					Iterable<? extends JavaFileObject> compilationUnits =
+					           fileManager.getJavaFileObjectsFromFiles(Arrays.asList(code));
 					try {
-						creator = (UndirectedGraphCreator) Class.forName(className).newInstance();
+						if(!compiler.getTask(out, fileManager, diagnosticListener, options, classes, compilationUnits).call()) {
+							throw new RuntimeException("Error while compiling the class " + className);
+						}
+						auxNum++;
+						
+						UndirectedGraphCreator creator;
+					
+						URLClassLoader loader = new URLClassLoader(new URL[]{new URL(pathToCode)});
+						loader.loadClass(className);
+						creator = (UndirectedGraphCreator) loader.loadClass(className).newInstance();
+						loader.close();
 						
 						graph = creator.create();
 						updateViewers();
-					} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+					} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | RuntimeException | IOException e) {
 						// Curious Exception
 						e.printStackTrace();
 					}
 				}
 				System.out.println("Fin ejecución del botón");
+				swapSystemToJDK();
 			}
 		});
 	}
 
-	protected String getStringCode(String className) {
+	protected File[] getStringCode(String className, URI dest) {
 		
 		InputDialog dialog = new InputDialog(this.shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL, "Generate Graph", "Add the code to generate a new Graph");
 		
@@ -175,17 +183,30 @@ public class DrawingApplet extends SWTApplet {
 		if(codeFromInput != null && !codeFromInput.isEmpty()) {
 			String finalCode = "import rioko.grapht.linear.UndirectedGraphCreator;\n" + 
 					"import rioko.grapht.linear.UndirectedGraph;\n" +
-					"public class " + className + " implements UndirectedGraphCreator {\n" +
-						"public UndirectedGraph create() {\n" + 
-							"return " + codeFromInput + ";\n" +
-						"}\n" + 
+					"public class " + className + " implements UndirectedGraphCreator {\n\n" +
+						"\tpublic UndirectedGraph create() {\n" + 
+							"\t\treturn " + codeFromInput + ";\n" +
+						"\t}\n" + 
 					"}\n";
+			
+			File newFile = new File(dest);
+			PrintStream stream;
+			try {
+				stream = new PrintStream(newFile);
+			
+			stream.print(finalCode);
+			
+			stream.close();
 		
-			return finalCode;
+			return new File[]{newFile};
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		
-		} else {
-			return null;
-		}
+		} 
+		
+		return new File[]{};
 	}
 
 	private void updateViewers() {
@@ -201,7 +222,21 @@ public class DrawingApplet extends SWTApplet {
 	}
 	
 	//Runnable method
+	private static String pathToCode = "file:///Users/Antonio/Desktop/aux_files/";
+	private static String pathToJDK = "C:\\Program Files\\Java\\jdk1.8.0_45\\jre";
 	public static void main(String[] args) {
+//		System.out.println("Size of args: " + args.length);
+//		for(int i = 0; i < args.length; i++) {
+//			System.out.println(args[i]);
+//		}
+		
+		if(args.length > 0) {
+			pathToCode = "file:///"+args[0].replace('\\', '/');
+		}
+		if(args.length > 1) {
+			pathToJDK = args[1];
+		}
+		
 		Display display = new Display();
 		Shell shell = new Shell(display);
 		
@@ -220,5 +255,18 @@ public class DrawingApplet extends SWTApplet {
 		}
 		applet.destroyGUI();
 		display.dispose();
+	}
+	
+	private static String auxString = null;
+	private static void swapSystemToJDK() {
+		if(auxString == null) {
+			auxString = new String(pathToJDK);
+		}
+		
+		String aux = System.getProperty("java.home");
+		System.out.println("Changing from \"" + aux + "\" to \"" + auxString + "\"");
+		
+		System.setProperty("java.home", auxString);
+		auxString = aux;
 	}
 }
