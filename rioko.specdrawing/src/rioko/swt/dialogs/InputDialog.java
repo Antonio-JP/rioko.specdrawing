@@ -50,7 +50,7 @@ public class InputDialog extends Dialog {
 	public String open() {
 		Shell shell = new Shell(getParent(), getStyle());
 		shell.setText(getText());
-		shell.setSize(300, 100);
+		shell.setSize(700, 100);
 		createContents(shell);
 		shell.pack();
 		shell.open();

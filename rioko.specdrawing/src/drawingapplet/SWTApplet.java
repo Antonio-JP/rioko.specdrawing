@@ -41,6 +41,10 @@ public abstract class SWTApplet extends JApplet {
 		return display;
 	}
 	
+	public Shell getShell() {
+		return shell;
+	}
+	
 	abstract protected void createGUI(Shell shell);
 	
 	abstract protected void destroyGUI();

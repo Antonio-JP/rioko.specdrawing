@@ -1,21 +1,5 @@
 package drawingapplet;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.io.Writer;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.Arrays;
-import javax.tools.DiagnosticListener;
-import javax.tools.JavaCompiler;
-import javax.tools.JavaFileObject;
-import javax.tools.JavaFileObject.Kind;
-import javax.tools.StandardJavaFileManager;
-import javax.tools.ToolProvider;
-
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Color;
@@ -31,7 +15,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.zest.layouts.LayoutStyles;
 
 import rioko.grapht.linear.UndirectedGraph;
-import rioko.grapht.linear.UndirectedGraphCreator;
 import rioko.swt.dialogs.InputDialog;
 import rioko.zest.layouts.IterativeLayoutAlgorithm;
 import rioko.zest.layouts.KorenLayoutAlgorithm;
@@ -46,15 +29,16 @@ public class DrawingApplet extends SWTApplet {
 
 	private GraphViewerComposite viewerIterative;
 	
-	private int auxNum = 0;
+	private JavaFileGraphCreator fileCreator = new JavaFileGraphCreator();
 	
 	
 	public DrawingApplet() {
 		super();
 	}
 
-	public DrawingApplet(Display display, Shell shell) {
+	public DrawingApplet(Display display, Shell shell, JavaFileGraphCreator fileCreator) {
 		super(display, shell);
+		this.fileCreator = fileCreator;
 //		graph = UndirectedGraph.cycle(15);
 //		graph = UndirectedGraph.complete(7);
 //		graph = UndirectedGraph.pointUnion(UndirectedGraph.cycle(3), UndirectedGraph.cycle(3), 1, 1);
@@ -92,8 +76,6 @@ public class DrawingApplet extends SWTApplet {
 	    viewerKoren = new GraphViewerComposite(body, SWT.NONE, this.graph, "Koren algorithm", new KorenLayoutAlgorithm(LayoutStyles.NO_LAYOUT_NODE_RESIZING, graph));
 
 	    viewerIterative = new GraphViewerComposite(body, SWT.NONE, this.graph, "Iterative algorithm", new IterativeLayoutAlgorithm(LayoutStyles.NO_LAYOUT_NODE_RESIZING, graph));
-	    
-	    //Create the layout algorithms
 		
 	    ////////////DOWN PART //////////////////////////
 		Composite down = new Composite(shell, SWT.NONE);
@@ -133,80 +115,20 @@ public class DrawingApplet extends SWTApplet {
 
 			@Override
 			public void mouseUp(MouseEvent arg0) {
-				swapSystemToJDK();
-				String className = "AuxiliaryGraphCreator_"+auxNum;
-				URI uriForFile = URI.create(pathToCode + className.replace('.','/') + Kind.SOURCE.extension);
-				File[] code =  getStringCode(className, uriForFile);
+				InputDialog dialog = new InputDialog(getShell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL, "Generate Graph", "Add the code to generate a new Graph");
 				
-				if(code != null) {
-					JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-					
-					Writer out = null;
-				    StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
-					DiagnosticListener<? super JavaFileObject> diagnosticListener = null;
-					Iterable<String> options = null;
-					Iterable<String> classes = null;
-					Iterable<? extends JavaFileObject> compilationUnits =
-					           fileManager.getJavaFileObjectsFromFiles(Arrays.asList(code));
-					try {
-						if(!compiler.getTask(out, fileManager, diagnosticListener, options, classes, compilationUnits).call()) {
-							throw new RuntimeException("Error while compiling the class " + className);
-						}
-						auxNum++;
-						
-						UndirectedGraphCreator creator;
-					
-						URLClassLoader loader = new URLClassLoader(new URL[]{new URL(pathToCode)});
-						loader.loadClass(className);
-						creator = (UndirectedGraphCreator) loader.loadClass(className).newInstance();
-						loader.close();
-						
-						graph = creator.create();
-						updateViewers();
-					} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | RuntimeException | IOException e) {
-						// Curious Exception
-						e.printStackTrace();
-					}
+				String code = dialog.open();
+				
+				try {
+					graph = fileCreator.generateNextFile(code).create();
+					updateViewers();
+				} catch(NullPointerException e) {
+					System.out.println("No graph created");
 				}
-				System.out.println("Fin ejecución del botón");
-				swapSystemToJDK();
+				
+				System.out.println("End button proccessing");
 			}
 		});
-	}
-
-	protected File[] getStringCode(String className, URI dest) {
-		
-		InputDialog dialog = new InputDialog(this.shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL, "Generate Graph", "Add the code to generate a new Graph");
-		
-		String codeFromInput = dialog.open();
-		
-		if(codeFromInput != null && !codeFromInput.isEmpty()) {
-			String finalCode = "import rioko.grapht.linear.UndirectedGraphCreator;\n" + 
-					"import rioko.grapht.linear.UndirectedGraph;\n" +
-					"public class " + className + " implements UndirectedGraphCreator {\n\n" +
-						"\tpublic UndirectedGraph create() {\n" + 
-							"\t\treturn " + codeFromInput + ";\n" +
-						"\t}\n" + 
-					"}\n";
-			
-			File newFile = new File(dest);
-			PrintStream stream;
-			try {
-				stream = new PrintStream(newFile);
-			
-			stream.print(finalCode);
-			
-			stream.close();
-		
-			return new File[]{newFile};
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		
-		} 
-		
-		return new File[]{};
 	}
 
 	private void updateViewers() {
@@ -218,31 +140,18 @@ public class DrawingApplet extends SWTApplet {
 	}
 
 	@Override
-	protected void destroyGUI() {		
-	}
+	protected void destroyGUI() { }
 	
 	//Runnable method
-	private static String pathToCode = "file:///Users/Antonio/Desktop/aux_files/";
-	private static String pathToJDK = "C:\\Program Files\\Java\\jdk1.8.0_45\\jre";
-	public static void main(String[] args) {
-//		System.out.println("Size of args: " + args.length);
-//		for(int i = 0; i < args.length; i++) {
-//			System.out.println(args[i]);
-//		}
-		
-		if(args.length > 0) {
-			pathToCode = "file:///"+args[0].replace('\\', '/');
-		}
-		if(args.length > 1) {
-			pathToJDK = args[1];
-		}
+	public static void main(String[] args) {		
+		JavaFileGraphCreator fileCreator = new JavaFileGraphCreator(args);
 		
 		Display display = new Display();
 		Shell shell = new Shell(display);
 		
 		shell.setText("Graph Drawing");
 		
-		DrawingApplet applet = new DrawingApplet(display, shell);
+		DrawingApplet applet = new DrawingApplet(display, shell, fileCreator);
 		applet.createGUI(shell);
 		
 		shell.pack();
@@ -255,18 +164,5 @@ public class DrawingApplet extends SWTApplet {
 		}
 		applet.destroyGUI();
 		display.dispose();
-	}
-	
-	private static String auxString = null;
-	private static void swapSystemToJDK() {
-		if(auxString == null) {
-			auxString = new String(pathToJDK);
-		}
-		
-		String aux = System.getProperty("java.home");
-		System.out.println("Changing from \"" + aux + "\" to \"" + auxString + "\"");
-		
-		System.setProperty("java.home", auxString);
-		auxString = aux;
-	}
+	}	
 }

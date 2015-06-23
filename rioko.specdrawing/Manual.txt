@@ -20,18 +20,16 @@
 	descargado el repositorio de GitHub es:
 		* java -jar %BASE%\dist\DrawingApplet.jar
 		* java -jar %BASE%\dist\DrawingApplet.jar %LOCAL%
-		* java -jar %BASE%\dist\DrawingApplet.jar %LOCAL% %JDK%
 	donde:
 		2.1.1 - %BASE% es el directorio donde se ha descargado el repositorio de GitHub
 		2.1.2 - %LOCAL% es una carpeta donde se almacenarán fragmentos de código intermedio (si no se especifica
 		se usará la carpeta %BASE%/dist/aux_code
-		2.1.3 - %JDK% es el directorio donde se encuentra la versión de JDK que se quiere utilizar
 		
 		EJEMPLO: Si en el ordenador trabajamos con un usuario de nombre "Pedro", tenemos en el escritorio una
 		carpeta llamada "aux" para guardar los ficheros intermedios y en el mismo escritorio hemos descargado 
-		el repositorio en una carpeta llamada "app" y tenemos la versión "jdk1.8.0_40" de JDK,	la llamada a 
+		el repositorio en una carpeta llamada "app", la llamada a 
 		DrawingApplet se vería como:
-			* java -jar C:\Users\Pedro\Desktop\app\rioko.specdrawing\dist\DrawingApplet.jar C:\Users\Pedro\Desktop\aux\ "C:\Program Files\Java\jdk1.8.0_40\"
+			* java -jar C:\Users\Pedro\Desktop\app\rioko.specdrawing\dist\DrawingApplet.jar C:\Users\Pedro\Desktop\aux\
 			
 	2.2 - Si tenemos instalada la versión referenciada en le link del apartado 1.1, entonces no es necesario usarlo 
 	en el comando.
