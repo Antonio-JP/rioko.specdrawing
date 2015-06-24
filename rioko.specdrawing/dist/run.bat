@@ -1,3 +1,5 @@
+@if not exist code mkdir code
+
 @echo Running DrawingApplet application. Thanks for use it ;)
 @echo
 @echo

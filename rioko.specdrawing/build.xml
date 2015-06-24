@@ -43,6 +43,9 @@
 			<fileset dir="${other.dir}" includes="**/run.bat" />
 			<fileset dir="${other.dir}" includes="**/Manual.txt" />
 		</copy>
+		<copy todir="${dist.code.dir}">
+			<fileset dir="${other.dir}" includes="**/foo" />
+		</copy>
 	</target>
 	
 	<target name="CreateJar" depends="CopyDependencies" description="Create Jar file">

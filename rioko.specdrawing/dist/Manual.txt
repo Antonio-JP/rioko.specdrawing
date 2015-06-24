@@ -1,36 +1,31 @@
-----------------------------------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------
+--------------------------------------------------------
 ----
 ---- CÓMO USAR DrawingApplet 
 ----
-----------------------------------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------
+--------------------------------------------------------
 
 
 1 - REQUISITOS PREVIOS:
 
-	1.1 - Para usar la aplicación DrawingApplet es necesario tener instalado en su ordenador una versión de la 
-	versión	de Java para desarrolladores (JDK). Se puede descargar la versión más actual en la web 
+	1.1 - Para usar la aplicación DrawingApplet es necesario tener instalado en su ordenador una versión de la 	versión	de Java para desarrolladores (JDK). Se puede descargar la versión más actual en la web 
 		- http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
 		
-	1.2 - Descargar el Repositorio de GitHub a su ordenador
+	1.2 - Descargar el Repositorio de GitHub a su ordenador.
 	
 
 2 - EJECUCIÓN:
 
-	2.1 - Para ejecutar DrawingApplet solo es necesario ejecutar el fichero "run.bat" que encontrará en la carpeta
-	"dist" del repositorio.
+	2.1 - Para ejecutar DrawingApplet solo es necesario ejecutar el fichero "run.bat" que encontrará en la carpeta "dist" del repositorio.
 	
-	2.2 - Si se quiere usar desde cualquier otro sitio, se puede crear un "Acceso Directo" al fichero "run.bat" y
-	ubicarlo donde se desee.
+	2.2 - Si se quiere usar desde cualquier otro sitio, se puede crear un "Acceso Directo" al fichero "run.bat" y ubicarlo donde se desee.
 		
 3 - USO DE LA APLICACIÓN
 
-	3.1 - Cuando se inicia la aplicación, se muestra un grafo estándar. En la ventana existen tres regiones fundamentales:
-		* La sección central-izquierda: muestra el dibujo realizado con el algoritmo de Koren, usando el segundo y tercer
-		autovector de la matriz Laplaciana.
-		* La sección central-derecha muestra el dibujo realizado con el algoritmo propuesto, calculando iterativamente el
-		segundo autovector de las matrices Laplacianas obtenidas.
+	3.1 - Cuando se inicia la aplicación, se muestra un grafo estándar. En la ventana existen tres regiones fundamentales: 
+		* La sección central-izquierda: muestra el dibujo realizado con el algoritmo de Koren, usando el segundo y tercer autovector de la matriz Laplaciana.
+		* La sección central-derecha muestra el dibujo realizado con el algoritmo propuesto, calculando iterativamente el segundo autovector de las matrices Laplacianas obtenidas.
 		* La sección infereior contiene dos botones:
 			+ Redraw: sirve para repintar el dibujo. Si se reescala la ventana, se puede usar para que reescale el dibujo.
 			+ Change Graph: se puede emplear para generar nuevos grafos (ver sección 3.2).
@@ -58,22 +53,19 @@
 			+ Grafo formado por un cuadrado con un aspa que tiene un vértice en el centro:
 				joinAll(cycle(4), complete(1), new int[]{0,1,2,3}, new int[]{0})
 	
-	3.3 - Una ves un grafo ha sido dibujado, se pueden clicar y arrastrar los vértices del grafo para modificar el dibujo obtenido. 
-	Para volver a colocar todo en su ubicación original, pulsar el botón Redraw.
+	3.3 - Una ves un grafo ha sido dibujado, se pueden clicar y arrastrar los vértices del grafo para modificar el dibujo obtenido. Para volver a colocar todo en su ubicación original, pulsar el botón Redraw.
 	
 4 - MANTEMINIENTO:
 	
-	4.1 - Como una aplicación con código abierto, es posible modificar el código descargado desde el repositorio de GitHub sin prejuicio
-	legal sobre quien lo modifique, pudiendo éste corregir errores de programación que detecte.
+	4.1 - Como una aplicación con código abierto, es posible modificar el código descargado desde el repositorio de GitHub sin prejuicio legal sobre quien lo modifique, pudiendo éste corregir errores de programación que detecte.
 	
-	4.2 - Si desea reportar un error que haya encontrado, en la terminal donde esté ejecutándolo aparecerá un informe del error obtenido.
-	Puede enviar esta información a la dirección ""DIRECCIÓN NO DISPONIBLE"" y se procederá al análisis y corrección del error detectado.
+	4.2 - Si desea reportar un error que haya encontrado, en la terminal donde esté ejecutándolo aparecerá un informe del error obtenido. Puede enviar esta información a la dirección ""DIRECCIÓN NO DISPONIBLE"" y se procederá al análisis y corrección del error detectado.
 	
-----------------------------------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------
+--------------------------------------------------------
 ----
 ---- GRACIAS, Y DISFRUTEN LA APLICACIÓN ;D
 ----
-----------------------------------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------
+--------------------------------------------------------
 		
