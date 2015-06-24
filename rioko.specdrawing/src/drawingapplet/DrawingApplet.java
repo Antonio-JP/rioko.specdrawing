@@ -29,11 +29,13 @@ public class DrawingApplet extends SWTApplet {
 
 	private GraphViewerComposite viewerIterative;
 	
-	private JavaFileGraphCreator fileCreator = new JavaFileGraphCreator();
+	private JavaFileGraphCreator fileCreator;
 	
 	
 	public DrawingApplet() {
 		super();
+		
+		fileCreator = new JavaFileGraphCreator();
 	}
 
 	public DrawingApplet(Display display, Shell shell, JavaFileGraphCreator fileCreator) {

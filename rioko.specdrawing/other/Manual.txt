@@ -1,0 +1,79 @@
+----------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------
+----
+---- CÓMO USAR DrawingApplet 
+----
+----------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------
+
+
+1 - REQUISITOS PREVIOS:
+
+	1.1 - Para usar la aplicación DrawingApplet es necesario tener instalado en su ordenador una versión de la 
+	versión	de Java para desarrolladores (JDK). Se puede descargar la versión más actual en la web 
+		- http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+		
+	1.2 - Descargar el Repositorio de GitHub a su ordenador
+	
+
+2 - EJECUCIÓN:
+
+	2.1 - Para ejecutar DrawingApplet solo es necesario ejecutar el fichero "run.bat" que encontrará en la carpeta
+	"dist" del repositorio.
+	
+	2.2 - Si se quiere usar desde cualquier otro sitio, se puede crear un "Acceso Directo" al fichero "run.bat" y
+	ubicarlo donde se desee.
+		
+3 - USO DE LA APLICACIÓN
+
+	3.1 - Cuando se inicia la aplicación, se muestra un grafo estándar. En la ventana existen tres regiones fundamentales:
+		* La sección central-izquierda: muestra el dibujo realizado con el algoritmo de Koren, usando el segundo y tercer
+		autovector de la matriz Laplaciana.
+		* La sección central-derecha muestra el dibujo realizado con el algoritmo propuesto, calculando iterativamente el
+		segundo autovector de las matrices Laplacianas obtenidas.
+		* La sección infereior contiene dos botones:
+			+ Redraw: sirve para repintar el dibujo. Si se reescala la ventana, se puede usar para que reescale el dibujo.
+			+ Change Graph: se puede emplear para generar nuevos grafos (ver sección 3.2).
+	
+	3.2 - Se pueden generar nuevos grafos para visualizar en la aplicación. Se pueden usar los siguientes comandos:
+		* cycle: permite generar un ciclo de tamaño dado
+			EJEMPLO: cycle(10) -> genera un ciclo con 10 vértices.
+		* complete: permite generar un grafo completo de tamaño dado
+			EJEMPLO: complete(7) -> genera un grafo completo de 7 vértices.
+		* disUnion: une dos grafos de manera disjunta.
+			EJEMPLO: disUnion(cycle(3), complete(10)) -> genera un grafo con dos componentes conexas, una un ciclo de 3 vértices y otra un grafo completo de 10 vertices
+		* pointUnion: une dos grafos por los vértices indicados.
+			EJEMPLO: pointUnion(cycle(4), complete(4), 0,1) -> Genera un grafo formado por un ciclo con 4 vértices y un grafo completo de 4 vértices donde el vértice 0 del ciclo "es" el vértice 1 del completo.
+		* join: une dos grafos a través de los vértices indicados con una nueva arista
+			EJEMPLO: join(cycle(3), cycle(5), 0,0)
+			EJEMPLO: join(cycle(3), complete(4), new int[]{0,1,2}, new int[]{0,2,3})
+		* joinAll: dados dos grafos y dos conjuntos de vértices, construye el grafo que se obtiene al juntar todos los vértices de primer conjunto con todos los vértices del segundo
+			EJEMPLO: joinAll(cycle(3), complete(4), new int[]{0,1,2}, new int[]{0,2,3})
+			
+		EJEMPLOS CONCRETOS: 
+			+ Grafo bipartito completo K_{3,5}:
+				joinAll(disUnion(disUnion(complete(1), complete(1)), complete(1)), disUnion(disUnion(disUnion(disUnion(complete(1), complete(1)), complete(1)), complete(1)), complete(1)), new int[]{0,1,2}, new int[]{0,1,2,3,4})
+			+ Grafo Pajarita Pj:
+				pointUnion(cycle(3), cycle(3), 0, 0)
+			+ Grafo formado por un cuadrado con un aspa que tiene un vértice en el centro:
+				joinAll(cycle(4), complete(1), new int[]{0,1,2,3}, new int[]{0})
+	
+	3.3 - Una ves un grafo ha sido dibujado, se pueden clicar y arrastrar los vértices del grafo para modificar el dibujo obtenido. 
+	Para volver a colocar todo en su ubicación original, pulsar el botón Redraw.
+	
+4 - MANTEMINIENTO:
+	
+	4.1 - Como una aplicación con código abierto, es posible modificar el código descargado desde el repositorio de GitHub sin prejuicio
+	legal sobre quien lo modifique, pudiendo éste corregir errores de programación que detecte.
+	
+	4.2 - Si desea reportar un error que haya encontrado, en la terminal donde esté ejecutándolo aparecerá un informe del error obtenido.
+	Puede enviar esta información a la dirección ""DIRECCIÓN NO DISPONIBLE"" y se procederá al análisis y corrección del error detectado.
+	
+----------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------
+----
+---- GRACIAS, Y DISFRUTEN LA APLICACIÓN ;D
+----
+----------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------
+		

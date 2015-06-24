@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Writer;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Arrays;
@@ -25,20 +26,14 @@ public class JavaFileGraphCreator {
 	
 	private int numOfClasses = 0;
 	
-	private String pathToCode = "file:///Users/Antonio/Desktop/aux_files/";
+	private String pathToCode = getURLToCodeFolder();
 	private String pathToJDK = getPathToLatestJDK();
 	
 	private String nextJavaHome = pathToJDK;
 	
 	public JavaFileGraphCreator() {	}
-	
-	public JavaFileGraphCreator(String[] args) {
-		if(args.length > 0) {
-			pathToCode = "file:///"+args[0].replace('\\', '/');
-		}
-		
-		System.out.println(pathToJDK);
-	}
+
+	public JavaFileGraphCreator(String[] args) { }
 	
 	public void swapSystemToJDK() {
 		String aux = System.getProperty("java.home");
@@ -120,6 +115,24 @@ public class JavaFileGraphCreator {
 		} 
 		
 		return new File[]{};
+	}
+	
+	private String getURLToCodeFolder() {
+		try {
+			String absolutePathToMe = (new File(JavaFileGraphCreator.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath())).getAbsolutePath().replace("\\", "/");
+			
+			/* We check if we are debugging or inside a Jar file */
+			if(absolutePathToMe.endsWith(".jar")) {
+				int index = absolutePathToMe.lastIndexOf("/");
+				absolutePathToMe = absolutePathToMe.substring(0, index);
+			}
+			
+			return "file:///"+ absolutePathToMe + "/code/";
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	private static String getPathToLatestJDK() {

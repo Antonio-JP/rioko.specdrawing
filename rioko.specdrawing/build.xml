@@ -7,7 +7,9 @@
 	<property name="build.dir" location="bin" />
 	<property name="dist.dir" location="dist" />
 	<property name="dist.lib.dir" location="dist/lib" />
+	<property name="dist.code.dir" location="dist/code" />
 	<property name="lib.dir" value="lib" />
+	<property name="other.dir" value="other" />
 	<property name="main-class" value="drawingapplet.DrawingApplet" />
 	
 	<target name="Clean" description="Clean jar files">
@@ -38,13 +40,15 @@
 			<fileset dir="${build.dir}" includes="**/*.html" />
 		</copy>
 		<copy todir="${dist.dir}">
-			<fileset dir="${lib.dir}" includes="**/*.jnlp" />
+			<fileset dir="${other.dir}" includes="**/run.bat" />
+			<fileset dir="${other.dir}" includes="**/Manual.txt" />
 		</copy>
 	</target>
 	
 	<target name="CreateJar" depends="CopyDependencies" description="Create Jar file">
 		<mkdir dir="${dist.dir}" />
 		<mkdir dir="${dist.lib.dir}" />
+		<mkdir dir="${dist.code.dir}" />
 		
 		<jar jarfile="${dist.dir}/${projectName}.jar" basedir="${build.dir}">
 			<manifest>

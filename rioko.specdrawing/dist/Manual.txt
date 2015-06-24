@@ -12,31 +12,17 @@
 	1.1 - Para usar la aplicación DrawingApplet es necesario tener instalado en su ordenador una versión de la 
 	versión	de Java para desarrolladores (JDK). Se puede descargar la versión más actual en la web 
 		- http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+		
+	1.2 - Descargar el Repositorio de GitHub a su ordenador
 	
 
 2 - EJECUCIÓN:
 
-	2.1 - La aplicación se ejecuta desde terminal. El comando básico para ejecutar DrawingApplet, una vez 
-	descargado el repositorio de GitHub es:
-		* java -jar %BASE%\dist\DrawingApplet.jar
-		* java -jar %BASE%\dist\DrawingApplet.jar %LOCAL%
-	donde:
-		2.1.1 - %BASE% es el directorio donde se ha descargado el repositorio de GitHub
-		2.1.2 - %LOCAL% es una carpeta donde se almacenarán fragmentos de código intermedio (si no se especifica
-		se usará la carpeta %BASE%/dist/aux_code
-		
-		EJEMPLO: Si en el ordenador trabajamos con un usuario de nombre "Pedro", tenemos en el escritorio una
-		carpeta llamada "aux" para guardar los ficheros intermedios y en el mismo escritorio hemos descargado 
-		el repositorio en una carpeta llamada "app", la llamada a 
-		DrawingApplet se vería como:
-			* java -jar C:\Users\Pedro\Desktop\app\rioko.specdrawing\dist\DrawingApplet.jar C:\Users\Pedro\Desktop\aux\
-			
-	2.2 - Si tenemos instalada la versión referenciada en le link del apartado 1.1, entonces no es necesario usarlo 
-	en el comando.
+	2.1 - Para ejecutar DrawingApplet solo es necesario ejecutar el fichero "run.bat" que encontrará en la carpeta
+	"dist" del repositorio.
 	
-	2.3 - Si no nos interesa almacenar en ningún sitio específico el código generado, entonces no es necesario indicar
-	el directorio, quedando así el comando como:
-		* java -jar %BASE%\dist\DrawingApplet.jar
+	2.2 - Si se quiere usar desde cualquier otro sitio, se puede crear un "Acceso Directo" al fichero "run.bat" y
+	ubicarlo donde se desee.
 		
 3 - USO DE LA APLICACIÓN
 
